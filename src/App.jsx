@@ -87,7 +87,7 @@ function App() {
         Image Detection
       </header>
       <div className="lg:max-w-3xl md:max-w-2xl sm:max-w-xl max-w-sm w-full flex flex-col items-center overflow-auto">
-        <Toaster position="top-right" />
+        <Toaster position="bottom-right" />
         <ImageUploader
           image={image}
           setImage={setImage}
