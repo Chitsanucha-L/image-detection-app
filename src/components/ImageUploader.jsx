@@ -76,7 +76,7 @@ function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
       <img
         src={preview}
         alt="Selected"
-        className="max-h-110 lg:min-h-80 md:min-h-65 min-h-50 object-contain rounded-md shadow-md"
+        className="max-h-120 h-auto object-contain rounded-md shadow-md"
       />
       <button
         className="absolute top-1 right-1 text-white bg-red-400 hover:bg-red-500 rounded-md p-1.5 cursor-pointer"

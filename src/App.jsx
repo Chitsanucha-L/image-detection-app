@@ -82,11 +82,11 @@ function App() {
 
   return (
     <div className="font-thai min-h-screen min-w-screen bg-white flex flex-col items-center">
-      <header className="w-full flex items-center text-[26px] text-gray-900 font-bold px-7 py-5 mb-16 border-b border-gray-300 shadow-md">
+      <header className="w-full flex items-center text-[26px] text-gray-900 font-bold px-7 py-5 mb-14 border-b border-gray-300 shadow-md">
         <Image className="mr-3 mb-1" size={30} />
         Image Detection
       </header>
-      <div className="lg:max-w-3xl md:max-w-2xl max-w-sm w-full flex flex-col items-center overflow-auto">
+      <div className="lg:max-w-3xl md:max-w-2xl sm:max-w-xl max-w-sm w-full flex flex-col items-center overflow-auto">
         <Toaster position="top-right" />
         <ImageUploader
           image={image}
