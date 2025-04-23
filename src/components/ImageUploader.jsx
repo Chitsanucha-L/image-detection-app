@@ -1,20 +1,55 @@
 import { useRef, useState } from "react";
 import { Upload, ImageUp, X } from "lucide-react";
+import * as UTIF from "utif";
 
 function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   const handleClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+  const handleFile = async (file) => {
+    const isTiff =
+      file.name.toLowerCase().endsWith(".tif") || file.type === "image/tiff";
+
+    if (isTiff) {
+      const buffer = await file.arrayBuffer();
+      const ifds = UTIF.decode(buffer);
+      UTIF.decodeImage(buffer, ifds[0]);
+      const rgba = UTIF.toRGBA8(ifds[0]);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = ifds[0].width;
+      canvas.height = ifds[0].height;
+      const ctx = canvas.getContext("2d");
+      const imageData = ctx.createImageData(canvas.width, canvas.height);
+      imageData.data.set(rgba);
+      ctx.putImageData(imageData, 0, 0);
+
+      // แปลง canvas เป็น PNG blob
+      canvas.toBlob((blob) => {
+        const pngFile = new File(
+          [blob],
+          file.name.replace(/\.(tif|tiff)$/i, ".png"),
+          { type: "image/png" }
+        );
+        setImage(pngFile);
+        setPreview(URL.createObjectURL(pngFile));
+        setDetecting(false);
+      }, "image/png");
+    } else {
       setImage(file);
+      setPreview(URL.createObjectURL(file));
       setDetecting(false);
     }
+  };
+
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
   };
 
   const handleDragOver = (e) => {
@@ -32,15 +67,14 @@ function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
 
     const files = e.dataTransfer.files;
     if (files.length > 0 && files[0].type.startsWith("image/")) {
-      setImage(files[0]);
-      setDetecting(false);
+      handleFile(files[0]);
     }
   };
 
   return image ? (
     <div className="relative">
       <img
-        src={URL.createObjectURL(image)}
+        src={preview}
         alt="Selected"
         className="max-h-110 lg:min-h-80 md:min-h-65 min-h-50 object-contain rounded-md shadow-md"
       />
@@ -49,6 +83,10 @@ function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
         onClick={() => {
           setImage(null);
           setText(null);
+          if (preview) {
+            URL.revokeObjectURL(preview);
+            setPreview(null);
+          }
         }}
         disabled={detecting}
       >
@@ -79,7 +117,7 @@ function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
         ref={fileInputRef}
         className="hidden"
         type="file"
-        accept="image/*"
+        accept="image/*,.tif,.tiff"
         onChange={handleChange}
       />
     </div>
