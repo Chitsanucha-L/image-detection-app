@@ -28,9 +28,6 @@ function App() {
       const formData = new FormData();
       formData.append("file", image);
 
-      const res = await axios.get("https://backend-ocr-qd5h.onrender.com/");
-      console.log(res.status);
-
       const response = await axios.post(
         "https://backend-ocr-qd5h.onrender.com/ocr",
         formData,
