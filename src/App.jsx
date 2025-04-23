@@ -14,7 +14,7 @@ import axios from "axios";
 function App() {
   const [image, setImage] = useState(null);
   const [detecting, setDetecting] = useState(false);
-  const [text, setText] = useState("");
+  const [text, setText] = useState(null);
 
   const handleDetect = async (e) => {
     e.preventDefault();
@@ -38,6 +38,7 @@ function App() {
         }
       );
       setText(response.data.text);
+      console.log(response.data.text);
       setDetecting(false);
       toast((t) => (
         <div className="relative flex-1 text-gray-800 text-[13px] px-1 py-2 group">
@@ -94,7 +95,7 @@ function App() {
           detecting={detecting}
           setText={setText}
         />
-        {image && !detecting && !text && (
+        {image && !detecting && text == null && (
           <button
             className="font-medium text-md mt-10 flex items-center text-white bg-slate-900 hover:bg-slate-800 px-5 py-2.5 rounded-md shadow-md cursor-pointer"
             onClick={handleDetect}
@@ -130,7 +131,7 @@ function App() {
             </p>
           </div>
         )}
-        {image && !detecting && text && (
+        {image && !detecting && text != null && (
           <div className="w-full flex flex-nowrap lg:space-x-8 md:space-x-6 space-x-4 mt-10 mb-2">
             <div className="flex-1 flex items-center bg-gray-100 px-5 py-2.5 rounded-md shadow-md">
               <p className="font-medium text-md text-gray-900">

@@ -48,7 +48,7 @@ function ImageUploader({ image, setImage, setDetecting, detecting, setText }) {
         className="absolute top-1 right-1 text-white bg-red-400 hover:bg-red-500 rounded-md p-1.5 cursor-pointer"
         onClick={() => {
           setImage(null);
-          setText("");
+          setText(null);
         }}
         disabled={detecting}
       >
